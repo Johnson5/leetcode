@@ -1,27 +1,15 @@
 class GroupAnagrams {
-    fun groupAnagrams(list: List<String>): MutableList<MutableList<String>> {
-        val result = mutableListOf<MutableList<String>>()
-        var items = list.toMutableList()
-        while (items.isNotEmpty()) {
-            val (head, tail) = items.first() to items.drop(1)
-            val group = mutableListOf(head)
-            val remain = mutableListOf<String>()
-            tail.forEach { it ->
-                if(it.length == head.length && areAnagrams(it, head)) {
-                    group.add(it)
-                } else {
-                    remain.add(it)
-                }
-            }
-            result.add(group)
-            items = remain
-        }
-        return result
-    }
+    fun groupAnagrams(list: List<String>): List<MutableList<String>> {
+        val map = HashMap<List<Int>, MutableList<String>>()
 
-    fun areAnagrams(str1: String, str2: String): Boolean {
-        val map1 = str1.groupingBy { it }.eachCount()
-        val map2 = str2.groupingBy { it }.eachCount()
-        return map1 == map2
+        for(string in list) {
+            val counts = MutableList(26) { 0 }
+            for (char in string) {
+                counts[char - 'a']++
+            }
+            map.getOrPut(counts) { mutableListOf() }.add(string)
+        }
+
+        return map.values.toList()
     }
 }
